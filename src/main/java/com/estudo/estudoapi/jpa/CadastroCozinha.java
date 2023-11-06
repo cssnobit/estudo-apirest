@@ -3,6 +3,7 @@ package com.estudo.estudoapi.jpa;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.estudo.estudoapi.domain.model.Cozinha;
 
@@ -21,5 +22,10 @@ public class CadastroCozinha {
 //		return query.getResultList();
 		
 		return manager.createQuery("from Cozinha", Cozinha.class).getResultList();
+	}
+	
+	@Transactional
+	public Cozinha adicionar(Cozinha cozinha) {
+		return manager.merge(cozinha);
 	}
 }
