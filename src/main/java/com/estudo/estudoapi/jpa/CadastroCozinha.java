@@ -17,7 +17,7 @@ public class CadastroCozinha {
 	@PersistenceContext
 	private EntityManager manager;
 	
-	public List<Cozinha> listar(){
+	public List<Cozinha> listar() {
 //		TypedQuery<Cozinha> query = manager.createQuery("from Cozinha", Cozinha.class);	
 //		return query.getResultList();
 		
@@ -31,5 +31,11 @@ public class CadastroCozinha {
 	@Transactional
 	public Cozinha salvar(Cozinha cozinha) {
 		return manager.merge(cozinha);
+	}
+	
+	@Transactional
+	public void remover(Cozinha cozinha) {
+		cozinha = buscar(cozinha.getId());
+		manager.remove(cozinha);
 	}
 }
