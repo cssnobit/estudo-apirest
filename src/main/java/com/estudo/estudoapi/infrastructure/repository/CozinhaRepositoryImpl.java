@@ -1,4 +1,4 @@
-package com.estudo.estudoapi.jpa;
+package com.estudo.estudoapi.infrastructure.repository;
 
 import java.util.List;
 
@@ -6,36 +6,38 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estudo.estudoapi.domain.model.Cozinha;
+import com.estudo.estudoapi.domain.repository.CozinhaRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-// import jakarta.persistence.TypedQuery;
 
 @Component
-public class CadastroCozinha {
+public class CozinhaRepositoryImpl implements CozinhaRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
 	
-	public List<Cozinha> listar() {
-//		TypedQuery<Cozinha> query = manager.createQuery("from Cozinha", Cozinha.class);	
-//		return query.getResultList();
-		
+	@Override
+	public List<Cozinha> todas() {	
 		return manager.createQuery("from Cozinha", Cozinha.class).getResultList();
 	}
 	
-	public Cozinha buscar(Long id) {
+	@Override
+	public Cozinha porId(Long id) {
 		return manager.find(Cozinha.class, id);
 	}
 	
 	@Transactional
-	public Cozinha salvar(Cozinha cozinha) {
+	@Override
+	public Cozinha adicionar(Cozinha cozinha) {
 		return manager.merge(cozinha);
 	}
 	
 	@Transactional
+	@Override
 	public void remover(Cozinha cozinha) {
-		cozinha = buscar(cozinha.getId());
+		cozinha = porId(cozinha.getId());
 		manager.remove(cozinha);
 	}
+
 }
