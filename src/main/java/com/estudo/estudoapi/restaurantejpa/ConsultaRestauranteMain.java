@@ -22,8 +22,9 @@ public class ConsultaRestauranteMain {
 		List<Restaurante> listaRestaurante = restaurantes.listar();
 		
 		for(Restaurante restaurante: listaRestaurante) {
-			System.out.printf("ID: %d / Nome: %s / Taxa Frete: R$%.2f%n",
-					restaurante.getId(), restaurante.getNome(), restaurante.getTaxaFrete());
+			System.out.printf("%d - %s - R$%.2f - %s\n",
+					restaurante.getId(), restaurante.getNome(), restaurante.getTaxaFrete(), 
+					restaurante.getCozinha().getNome());
 		}
 		
 	}
