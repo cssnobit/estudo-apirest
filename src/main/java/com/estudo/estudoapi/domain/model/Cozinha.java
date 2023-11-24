@@ -14,8 +14,8 @@ import lombok.EqualsAndHashCode;
 public class Cozinha {
 
 	@EqualsAndHashCode.Include
-	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	private Long id;
 
 	@Column(nullable = false)
