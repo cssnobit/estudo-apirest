@@ -1,5 +1,6 @@
 insert into cozinha (id, nome) values (1, 'Tailandesa');
 insert into cozinha (id, nome) values (2, 'Indiana');
+insert into cozinha (id, nome) values (3, 'Brasileira');
 
 insert into forma_pagamento (descricao) values ('Pagamento feito no PIX');
 insert into forma_pagamento (descricao) values ('Pagamento feito no dinheiro');
@@ -16,7 +17,9 @@ insert into permissao (nome, descricao) values ('ADICIONAR_COZINHA', 'Permite ad
 
 insert into estado (nome) values ('Sao Paulo');
 insert into estado (nome) values ('Minas Gerais');
+insert into estado (nome) values ('Maranhao');
 
 insert into cidade (nome, estado_id) values ('Brumadinho', 2);
 insert into cidade (nome, estado_id) values ('Santos', 1);
 insert into cidade (nome, estado_id) values ('Sao Vicente', 1);
+insert into cidade (nome, estado_id) values ('Barreirinhas', 3);

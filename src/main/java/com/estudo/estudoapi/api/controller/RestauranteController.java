@@ -2,18 +2,22 @@ package com.estudo.estudoapi.api.controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.estudo.estudoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.estudo.estudoapi.domain.model.Restaurante;
+import com.estudo.estudoapi.domain.repository.CozinhaRepository;
 import com.estudo.estudoapi.domain.repository.RestauranteRepository;
 import com.estudo.estudoapi.domain.service.CadastroRestauranteService;
 
@@ -23,6 +27,9 @@ public class RestauranteController {
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
+	
+	@Autowired
+	private CozinhaRepository cozinhaRepository;
 	
 	@Autowired
 	private CadastroRestauranteService cadastroRestaurante;
@@ -56,4 +63,33 @@ public class RestauranteController {
 		}
 	}
 	
+	@PutMapping("/{restauranteId}")
+	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, 
+			@RequestBody Restaurante restaurante) {		
+		
+		Restaurante restauranteAtual = restauranteRepository.porId(restauranteId);
+		if(restauranteAtual != null) {		
+			try {
+				BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+				restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
+				
+				return ResponseEntity.ok(restauranteAtual);
+			} catch(EntidadeNaoEncontradaException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+	
+	@DeleteMapping("/{restauranteId}")
+	public ResponseEntity<?> excluir(@PathVariable Long restauranteId) {
+		try {
+			cadastroRestaurante.excluir(restauranteId);
+			
+			return ResponseEntity.noContent().build();
+		} catch(EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+	}
 }

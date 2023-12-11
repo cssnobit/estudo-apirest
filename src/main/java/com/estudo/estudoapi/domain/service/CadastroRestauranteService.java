@@ -1,6 +1,7 @@
 package com.estudo.estudoapi.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.estudo.estudoapi.domain.exception.EntidadeNaoEncontradaException;
@@ -30,6 +31,15 @@ public class CadastroRestauranteService {
 		restaurante.setCozinha(cozinha);
 		
 		return restauranteRepository.adicionar(restaurante);
+	}
+	
+	public void excluir(Long restauranteId) {
+		try {			
+			restauranteRepository.remover(restauranteId);
+		} catch(EmptyResultDataAccessException e) {
+			throw new EntidadeNaoEncontradaException(
+					String.format("Nao existe cadastro de restaurante com codigo %d", restauranteId));
+		}
 	}
 	
 }
