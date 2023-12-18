@@ -1,5 +1,7 @@
 package com.estudo.estudoapi.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,24 +23,25 @@ public class CadastroCidadeService {
 	
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = estadoRepository.porId(estadoId);
-		
-		if(estado == null) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Nao existe cadastro de estado com codigo %d", estadoId));
-		}
-		
+		Estado estado = estadoRepository.findById(estadoId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(
+					String.format("Nao existe cadastro de estado com codigo %d", estadoId)));
+
 		cidade.setEstado(estado);
 		
-		return cidadeRepository.adicionar(cidade);
+		return cidadeRepository.save(cidade);
 	}
 	
 	public void excluir(Long cidadeId) {
-		try {			
-			cidadeRepository.remover(cidadeId);
-		} catch(EmptyResultDataAccessException e) {
+		
+		Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
+			
+		if(cidade.isEmpty()) {
 			throw new EntidadeNaoEncontradaException(
 					String.format("Nao existe cadastro de cidade com codigo %d", cidadeId));
 		}
+		
+		cidadeRepository.deleteById(cidadeId);
+		
 	}
 }

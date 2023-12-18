@@ -1,6 +1,7 @@
 package com.estudo.estudoapi.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.estudo.estudoapi.domain.exception.EntidadeNaoEncontradaException;
 import com.estudo.estudoapi.domain.model.Cidade;
-import com.estudo.estudoapi.domain.model.Estado;
 import com.estudo.estudoapi.domain.repository.CidadeRepository;
 import com.estudo.estudoapi.domain.repository.EstadoRepository;
 import com.estudo.estudoapi.domain.service.CadastroCidadeService;
@@ -37,15 +37,15 @@ public class CidadeController {
 	
 	@GetMapping
 	public List<Cidade> listar(){
-		return cidadeRepository.todas();
+		return cidadeRepository.findAll();
 	}
 	
 	@GetMapping("/{cidadeId}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-		Cidade cidade = cidadeRepository.porId(cidadeId);
+		Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
 		
-		if(cidade != null) {
-			return ResponseEntity.ok(cidade);
+		if(cidade.isPresent()) {
+			return ResponseEntity.ok(cidade.get());
 		}
 		
 		return ResponseEntity.notFound().build();
@@ -66,14 +66,14 @@ public class CidadeController {
 	public ResponseEntity<?> atualizar(@PathVariable Long cidadeId,
 			@RequestBody Cidade cidade) {
 		
-		Cidade cidadeAtual = cidadeRepository.porId(cidadeId);
+		Optional<Cidade> cidadeAtual = cidadeRepository.findById(cidadeId);
 		
-		if(cidadeAtual != null) {
+		if(cidadeAtual.isPresent()) {
 			try {
-				BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+				BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
 				
-				cidadeAtual = cadastroCidade.salvar(cidadeAtual);			
-				return ResponseEntity.ok(cidadeAtual);			
+				Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());			
+				return ResponseEntity.ok(cidadeSalva);			
 			} catch(EntidadeNaoEncontradaException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}
