@@ -1,5 +1,8 @@
 package com.estudo.estudoapi.api.controller;
 
+import static com.estudo.estudoapi.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static com.estudo.estudoapi.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +17,6 @@ import com.estudo.estudoapi.domain.model.Cozinha;
 import com.estudo.estudoapi.domain.model.Restaurante;
 import com.estudo.estudoapi.domain.repository.CozinhaRepository;
 import com.estudo.estudoapi.domain.repository.RestauranteRepository;
-import com.estudo.estudoapi.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
-import com.estudo.estudoapi.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 @RestController
 @RequestMapping("/teste")
@@ -40,6 +41,11 @@ public class TesteController {
 	@GetMapping("/cozinhas/exists")
 	public boolean cozinhaExists(@RequestParam("nome") String nome) {
 		return cozinhaRepository.existsByNome(nome);
+	}
+	
+	@GetMapping("/cozinhas/primeiro")
+	public Optional<Cozinha> cozinhaPrimeiro() {
+		return cozinhaRepository.buscarPrimeiro();
 	}
 	
 //	@GetMapping("/restaurantes/por-taxa-frete")
@@ -77,9 +83,11 @@ public class TesteController {
 	
 	@GetMapping("/restaurantes/com-frete-gratis")
 	public List<Restaurante> restaurantesComFreteGratis(String nome) {
-		var comFreteGratis = new RestauranteComFreteGratisSpec();
-		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
-		
-		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+		return restauranteRepository.findComFreteGratis(nome);
+	}
+	
+	@GetMapping("/restaurantes/primeiro")
+	public Optional<Restaurante> restaurantePrimeiro() {
+		return restauranteRepository.buscarPrimeiro();
 	}
 }
