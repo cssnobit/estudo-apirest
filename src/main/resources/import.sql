@@ -2,9 +2,10 @@ insert into cozinha (id, nome) values (1, 'Tailandesa');
 insert into cozinha (id, nome) values (2, 'Indiana');
 insert into cozinha (id, nome) values (3, 'Brasileira');
 
-insert into forma_pagamento (descricao) values ('Pagamento feito no PIX');
-insert into forma_pagamento (descricao) values ('Pagamento feito no dinheiro');
-insert into forma_pagamento (descricao) values ('Pagamento feito no cartao de credito');
+insert into forma_pagamento (descricao) values ('PIX');
+insert into forma_pagamento (descricao) values ('Dinheiro');
+insert into forma_pagamento (descricao) values ('Cartão de crédito');
+insert into forma_pagamento (descricao) values ('Cartão de débito');
 
 insert into restaurante (nome, taxa_frete, cozinha_id) values ('Thaitai Restaurante', 10.0, 1);
 insert into restaurante (nome, taxa_frete, cozinha_id) values ('Tandoor Indian Food', 12.0, 2);
@@ -23,3 +24,5 @@ insert into cidade (nome, estado_id) values ('Brumadinho', 2);
 insert into cidade (nome, estado_id) values ('Santos', 1);
 insert into cidade (nome, estado_id) values ('Sao Vicente', 1);
 insert into cidade (nome, estado_id) values ('Barreirinhas', 3);
+
+insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1, 1), (1, 3), (1, 4), (2, 1), (2, 2), (3, 2), (3, 3), (3, 4);
